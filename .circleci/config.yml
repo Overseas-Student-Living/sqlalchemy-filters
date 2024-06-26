@@ -14,16 +14,14 @@ jobs:
       - run:
           name: install
           command: |
-            sudo pip install -U pip wheel setuptools
-            sudo pip install -U -e ".[dev,mysql,postgresql]" --trusted-host devpi.student.com --extra-index-url  https://devpi:fzTY7GNJstJiUtJz@devpi.student.com/root/prod/+simple/
-      # - run:
-      #     name: test
-      #     environment:
-      #       MODULE_NAME: sqlalchemy_filters
-      #     command: |
-      #       make coverage
-      #       mkdir /tmp/coverage-html
-      #       coverage html -d /tmp/coverage-html --fail-under 90
+            pip install -U pip wheel setuptools
+            pip install -U -e ".[dev,mysql,postgresql]" --trusted-host devpi.student.com --extra-index-url  https://devpi:fzTY7GNJstJiUtJz@devpi.student.com/root/prod/+simple/
+      - run:
+          name: test
+          environment:
+            MODULE_NAME: sqlalchemy_filters
+          command: |
+            pip install -U pip wheel setuptools
       - store_artifacts:
           path: /tmp/coverage-html
           destination: coverage-html
@@ -39,7 +37,7 @@ jobs:
       - run:
           name: upload sqlalchemy filters package
           command: |
-            sudo pip install devpi-client
+            pip install devpi-client
             devpi use https://root:${DEVPI_ROOT_PASSWORD}@devpi.student.com
             devpi login root --password=${DEVPI_ROOT_PASSWORD}
             devpi use root/prod
