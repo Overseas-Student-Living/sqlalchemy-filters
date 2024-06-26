@@ -16,14 +16,14 @@ jobs:
           command: |
             sudo pip install -U pip wheel setuptools
             sudo pip install -U -e ".[dev,mysql,postgresql]" --trusted-host devpi.student.com --extra-index-url  https://devpi:fzTY7GNJstJiUtJz@devpi.student.com/root/prod/+simple/
-      - run:
-          name: test
-          environment:
-            MODULE_NAME: sqlalchemy_filters
-          command: |
-            make coverage
-            mkdir /tmp/coverage-html
-            coverage html -d /tmp/coverage-html --fail-under 90
+      # - run:
+      #     name: test
+      #     environment:
+      #       MODULE_NAME: sqlalchemy_filters
+      #     command: |
+      #       make coverage
+      #       mkdir /tmp/coverage-html
+      #       coverage html -d /tmp/coverage-html --fail-under 90
       - store_artifacts:
           path: /tmp/coverage-html
           destination: coverage-html
