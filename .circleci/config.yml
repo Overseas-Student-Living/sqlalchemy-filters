@@ -50,9 +50,6 @@ workflows:
       - test:
           context: org-global
       - approval:
-          filters:
-            branches:
-              only: master
           context: org-global
           type: approval
           requires:
