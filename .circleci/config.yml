@@ -15,7 +15,7 @@ jobs:
           name: install
           command: |
             pip install -U pip wheel setuptools
-            pip install -U -e ".[dev,mysql,postgresql]" --trusted-host devpi.student.com --extra-index-url  https://devpi:fzTY7GNJstJiUtJz@devpi.student.com/root/prod/+simple/
+            pip install -U -e ".[dev,mysql,postgresql]" --trusted-host devpi.student.com --extra-index-url  https://devpi:${DEVPI_HTTP_PASSWORD}@devpi.student.com/root/prod/+simple/
       - store_artifacts:
           path: /tmp/coverage-html
           destination: coverage-html
