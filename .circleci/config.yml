@@ -1,0 +1,57 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/python:3.10
+      - image: circleci/mysql:8.0.16
+      - image: circleci/postgres:9.6.9-alpine
+
+    working_directory: ~/sqlalchemy_filters
+
+    steps:
+      - checkout
+
+      - run:
+          name: install
+          command: |
+            pip install -U pip wheel setuptools
+            pip install -U -e ".[dev,mysql,postgresql]" --trusted-host devpi.student.com --extra-index-url  https://devpi:${DEVPI_HTTP_PASSWORD}@devpi.student.com/root/prod/+simple/
+      - store_artifacts:
+          path: /tmp/coverage-html
+          destination: coverage-html
+
+  release:
+
+    docker:
+      - image: circleci/python:3.10
+
+    steps:
+      - checkout
+
+      - run:
+          name: upload sqlalchemy filters package
+          command: |
+            pip install devpi-client
+            devpi use https://root:${DEVPI_ROOT_PASSWORD}@devpi.student.com
+            devpi login root --password=${DEVPI_ROOT_PASSWORD}
+            devpi use root/prod
+            devpi upload
+            devpi logoff
+workflows:
+  version: 2
+  do-it-all:
+    jobs:
+      - test:
+          context: org-global
+      - approval:
+          filters:
+            branches:
+              only: master
+          context: org-global
+          type: approval
+          requires:
+            - test
+      - release:
+          context: org-global
+          requires:
+            - approval
